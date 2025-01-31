@@ -1,0 +1,22 @@
+{% extends './layout.html' %}
+{% block back %}
+<div class="back">
+    <a href="/">
+        <img src="{{ url_for('static', filename='img/back.svg') }}" alt="Back">
+        <span class="accent-gold">Edit artists</span>
+    </a>
+</div>
+{% endblock %}
+{% block content %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new_game();
+    });
+</script>
+<section id="content">
+    <p id="loading">
+        Loading...
+    </p>
+    <div class="loader"></div>
+</section>
+{% endblock %}

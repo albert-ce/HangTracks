@@ -1,0 +1,312 @@
+body {
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    color: white;
+    background-color: black;
+    margin: 0;
+    max-width: 100%;
+    min-height: 100vh;
+}
+
+header {
+    font-family: "Space Grotesk", serif;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 25vmin;
+    column-gap: 6vmin;
+}
+
+header img {
+    width: 5.5vmin;
+}
+
+.logo-icon {
+    padding-right: 0.6vmin;
+    width: 9vmin;
+    transform: translateY(-35%);
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 1;
+}
+
+@media (min-width: 576px) {
+    header {
+        font-size: larger;
+        height: 20vmin;
+    }
+
+    header img {
+        width: 3.5vmin;
+    }
+
+    .logo-icon {
+        width: 6vmin;
+    }
+}
+
+h2 {
+    max-width: 60vw;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+p {
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+br {
+    display: block;
+    content: "";
+    margin-top: 2vmin;
+}
+
+.subtitle {
+    display: block;
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 2em;
+}
+
+.no-artists {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    text-align: center;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.511);
+}
+
+@keyframes disappear {
+    0% {
+        opacity: 1;
+        font-size: 1rem;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        font-size: 0;
+        opacity: 0;
+    }
+}
+
+p.error-message {
+    margin: 0;
+    display: none;
+    font-size: 1rem;
+    text-align: center;
+    font-weight: 500;
+    padding: 0 1em;
+    color: #fb412cb8;
+    animation: none;
+}
+
+.intro {
+    text-align: justify;
+    max-width: 40vw;
+}
+
+.accent-gold {
+    font-weight: 600;
+    color: #ffc840;
+}
+
+.play-button {
+    margin-top: 5vmin;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.8em;
+    font-weight: 700;
+    font-size: 1em;
+    padding: 0.5em 1em;
+    border: 0;
+    border-radius: 1em;
+    background-color: #ffc840;
+    color: black;
+}
+
+#artists {
+    margin-bottom: 0.5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: 0.8em;
+    flex-wrap: wrap;
+    flex-shrink: 4;
+    max-width: 40vw;
+}
+
+.artist {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8em;
+    flex-wrap: nowrap;
+    max-width: 60vw;
+    border-radius: 1em;
+    padding: 0.2em 0.4em 0.2em 0.8em;
+    border: #ffc840 solid 0.1em;
+}
+
+.artist span {
+    flex: 1;
+}
+
+.artist img {
+    width: auto;
+    height: 1.54em;
+}
+
+.artist img:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.play-button img {
+    width: 2em;
+    height: 2em;
+}
+
+.play-button:hover {
+    cursor: pointer;
+}
+
+.search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8em;
+    flex-wrap: nowrap;
+    height: 2.2em;
+    max-width: 40vw;
+    margin-top: 1em;
+}
+
+.add-button {
+    width: auto;
+    height: 80%;
+    border-radius: 100%;
+    border: white solid 0.1em;
+}
+
+.add-button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+input[type="text"] {
+    height: 95%;
+    padding: 0.2em 1em;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.8em;
+    border-radius: 1em;
+    font-weight: 500;
+}
+
+#content {
+    flex: 1;
+}
+
+footer {
+    margin: 1.5em auto 1em;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.9em;
+    font-style: normal;
+    width: 100%;
+}
+
+footer * {
+    color: rgba(255, 255, 255, 0.3);
+    font-style: normal;
+}
+
+@media (max-width: 1024px) {
+    p {
+        font-size: 1em;
+    }
+
+    .intro,
+    #artists,
+    .artist {
+        max-width: 60vw;
+    }
+
+    footer {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 768px) {
+    .play-button img {
+        width: 1.7em;
+        height: 1.7em;
+    }
+
+    h2 {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 568px) {
+    p {
+        font-size: 0.9em;
+    }
+
+    br {
+        margin-top: 3vmin;
+    }
+
+    .play-button {
+        font-size: 0.9em;
+        padding: 0.7em 1em;
+    }
+
+    .play-button img {
+        width: 1.5em;
+        height: 1.5em;
+    }
+}
+
+body {
+    background-color: black;
+    background-image: url('../img/noise.svg');
+    background-size: 500px 500px;
+    animation: move 80s linear infinite;
+}
+
+
+@keyframes move {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    100% {
+        background-position: 100% 500%;
+    }
+}

@@ -1,0 +1,10 @@
+{% if not artists_data %}
+<span class="no-artists">No artists selected</span>
+{% endif %}
+{% for mbid, name in artists_data.items() %}
+<div class="artist">
+    <span>{{name}}</span>
+    <img onclick="remove_artist('{{mbid}}');" src="{{ url_for('static', filename='img/close.svg')}}"
+        alt="Remove artist">
+</div>
+{% endfor %}

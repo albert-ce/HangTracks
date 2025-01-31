@@ -1,0 +1,16 @@
+<div class="game">
+    <img class="hangman" src="{{ url_for('static', filename=game_data.img) }}" alt="Hangman">
+    <p class="word" id="title">{{game_data.display}}</p>
+</div>
+<div class="keyboard">
+    {% for row in keyboard %}
+    <div>
+        {% for key in row %}
+        <div {% if key in game_data.mistakes %} style="background-color: rgb(57, 0, 0);" {% endif %} {% if key in
+            game_data.hits %} style="background-color: rgb(0, 57, 9);" {% endif %} onclick="guess('{{ key }}');">
+            {{ key }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>

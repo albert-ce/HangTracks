@@ -1,0 +1,183 @@
+.back {
+    position: fixed;
+    position: fixed;
+    top: 1.5em;
+    right: 1.5em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    column-gap: 1em;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.back img {
+    height: 1.1em;
+}
+
+.back a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: auto;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.loader {
+    border: 0.5em solid rgba(255, 255, 255, 0.2);
+    border-top: 0.5em solid white;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    animation: spin 2s linear infinite;
+}
+
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#loading {
+    font-weight: 600;
+}
+
+
+@keyframes appearMessage {
+    0% {
+        transform: scale(0.8);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.final {
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 2;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85em;
+    gap: 1.4em;
+    max-width: 80vh;
+}
+
+.final a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.8em;
+    padding: 0.5em 1em;
+    border-radius: 1em;
+    text-decoration: none;
+    color: inherit;
+    width: auto;
+}
+
+.final img {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.final a:hover {
+    cursor: pointer;
+}
+
+.game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: 1.6em;
+    max-width: 70%;
+}
+
+.word {
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+    min-width: 50%;
+}
+
+.hangman {
+    width: 35vh;
+}
+
+h3 {
+    font-size: 1.5em;
+    margin-top: 0.5em;
+}
+
+.won {
+    color: rgb(22, 213, 96);
+}
+
+.lost {
+    color: rgb(251, 73, 52)
+}
+
+#title {
+    word-spacing: 0.2rem;
+}
+
+.info {
+    font-size: 0.8em;
+    color: grey;
+    font-style: italic;
+    text-align: right;
+}
+
+@media (max-width: 1024px) {
+
+    .back {
+        position: relative;
+        transform: translateX(50vw) translateX(-50%);
+        margin-top: 2vmin;
+        margin-right: 7vmin;
+        top: 0;
+        right: 0;
+    }
+
+    .back-picture {
+        height: 1.5em;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .game {
+        flex-direction: column;
+    }
+
+    .word {
+        margin-top: 0.7em;
+    }
+
+    .back-picture {
+        height: 1.3em;
+    }
+}
+
+@media (max-width: 568px) {
+
+    .back-picture {
+        height: 1.1em;
+    }
+
+    #loading {
+        font-size: 1em;
+    }
+}

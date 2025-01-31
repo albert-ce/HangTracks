@@ -1,0 +1,29 @@
+{% extends './layout.html' %}
+{% block content %}
+<section id="content">
+    <h2>How well do you know your favorite artists?</h2>
+    <p class="intro">
+        With HangTracks, you play hangman using track titles from your <span class="accent-gold">favourite
+            artists</span>.
+        <br>
+        It’s not just about knowing the songs — it’s about testing your memory 🧠 and owning your
+        musical taste 🎵.
+        <br>
+        <span class="subtitle">Type in some artists to begin:</span>
+    </p>
+    <div id="artists">
+        {% include "./artists.html" %}
+    </div>
+    <p class="error-message" id="error-message">Artist not found</p>
+    <div class="search-bar">
+        <input type="text" name="search" id="search"
+            placeholder="{{ ['ex. The Strokes', 'ex. Pink Floyd', 'ex. Queen', 'ex. The Beatles', 'ex. Weezer', 'ex. ABBA', 'ex. Tame Impala', 'ex. Eminem', 'ex. Bruno Mars'] | random }}"
+            required>
+        <img onclick="add_artist();" class="add-button" src="{{ url_for('static', filename='img/add.svg')}}"
+            alt="Add artist">
+    </div>
+    <button class="play-button" onclick="start_playing()">
+        <img src="{{ url_for('static', filename='img/game.svg')}}" alt="Play Icon"> PLAY
+    </button>
+</section>
+{% endblock %}

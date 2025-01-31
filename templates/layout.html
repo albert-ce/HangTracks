@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Space+Grotesk:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/keyboard.css')}}">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg')}}" type="image/svg+xml">
+    <script src="{{ url_for('static', filename='js/script.js')}}"></script>
+    <title>HangTracks - Play Hangman with your favorite songs</title>
+</head>
+
+<body>
+    {% block back %}
+    {% endblock %}
+    <header>
+        <img class="logo-icon" src="{{ url_for('static', filename='img/rope.svg')}}" alt="Rope Icon">
+        <h1>HangTracks</h1>
+        <img src="{{ url_for('static', filename='img/music_note.svg')}}" alt="Music Note Icon">
+    </header>
+    {% block content %}
+    {% endblock %}
+    <footer>
+        Made by <a href="https://github.com/albert-ce">@albert-ce</a> on GitHub
+    </footer>
+</body>
+
+</html>
