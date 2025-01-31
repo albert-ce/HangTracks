@@ -200,18 +200,20 @@ p.error-message {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 0.8em;
+    gap: 0.3em;
     flex-wrap: nowrap;
     height: 2.2em;
     max-width: 40vw;
     margin-top: 1em;
+    border-radius: 1em;
+    border: #ffc840 solid 0.1em;
+    box-sizing: border-box;
 }
 
 .add-button {
     width: auto;
     height: 80%;
-    border-radius: 100%;
-    border: white solid 0.1em;
+    margin-right: 0.3em;
 }
 
 .add-button:hover {
@@ -220,12 +222,13 @@ p.error-message {
 }
 
 input[type="text"] {
-    height: 95%;
+    height: 2.2em;
     padding: 0.2em 1em;
     font-family: "Poppins", sans-serif;
     font-size: 0.8em;
-    border-radius: 1em;
+    border-radius: 1em 0 0 1em;
     font-weight: 500;
+    border: none;
 }
 
 #content {

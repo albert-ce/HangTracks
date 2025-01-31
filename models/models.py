@@ -24,7 +24,7 @@ class MusicBrainzService:
     def __init__(self):
         self.lock = Lock()
         self.last_call = None
-        self.waiting_time = 5
+        self.waiting_time = 1
         self.user_agent = "HangTracks/0.1.0 (https://github.com/albert-ce)"
         self.headers = {"User-Agent": self.user_agent}
 

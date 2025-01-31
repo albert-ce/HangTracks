@@ -14,7 +14,7 @@
         href="https://open.spotify.com/search/{{ (game_data.secret.lower() ~ ' ' ~ track_data.artist) | urlencode }}">
         <img src="{{ url_for('static', filename='img/north_east.svg')}}" alt="Link"> SEARCH ON SPOTIFY
     </a>
-    <a onclick="new_game();" style="border: white 0.15em solid;">
+    <a href="/play" style="border: white 0.15em solid;">
         <img src="{{ url_for('static', filename='img/refresh.svg')}}" alt="Refresh"> TRY AGAIN
     </a>
 </div>
