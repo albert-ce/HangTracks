@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function remove_artist(name) {
-    var response = await fetch('/setup/remove_artist?mbid=' + encodeURIComponent(name));
+    var response = await fetch('/setup/remove_artist?name=' + encodeURIComponent(name));
     var responseTxt = await response.text()
     document.getElementById('artists').innerHTML = responseTxt;
 }
