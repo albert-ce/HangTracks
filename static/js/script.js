@@ -30,7 +30,7 @@ async function add_artist() {
         var responseJSON = await response.json()
         document.getElementById('artists').innerHTML = responseJSON['html'];
         if (!responseJSON['artist_found']) {
-            show_error("Artist not found");
+            show_error("Artist '" + search + "' not found");
         }
         input.placeholder = original;
         input.disabled = false;
@@ -49,8 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-async function remove_artist(mbid) {
-    var response = await fetch('/setup/remove_artist?mbid=' + mbid);
+async function remove_artist(name) {
+    var response = await fetch('/setup/remove_artist?mbid=' + encodeURIComponent(name));
     var responseTxt = await response.text()
     document.getElementById('artists').innerHTML = responseTxt;
 }

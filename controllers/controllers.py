@@ -13,28 +13,28 @@ def add_artist():
         abort(400, description="The 'search' argument is required")
 
     artist = music.search_artist(search)
-    artist_found = artist is not None and artist.get('mbid')
+    artist_found = artist is not None
 
     if artist_found:
-        session.setdefault('artists', {})[artist['mbid']] = artist['name']
+        session.setdefault('artists', []).append(artist['name'])
         session.modified = True
 
     return jsonify({
-        "html": render_template('artists.html', artists_data=session.get('artists', {})),
+        "html": render_template('artists.html', artists_data=session.get('artists', [])),
         "artist_found": artist_found
     })
 
 @setup.route('/setup/remove_artist')
 def remove_artist():
-    mbid = request.args.get('mbid')
-    if not mbid:
-        abort(400, description="The 'mbid' argument is required")
+    name = request.args.get('name')
+    if not name:
+        abort(400, description="The 'name' argument is required")
 
-    if mbid in session.get('artists', {}):
-        del session['artists'][mbid]
+    if name in session.get('artists', []):
+        session['artists'].remove(name)
         session.modified = True
 
-    return render_template('artists.html', artists_data=session.get('artists', {}))
+    return render_template('artists.html', artists_data=session.get('artists', []))
 
 @setup.route('/setup/check_artists')
 def check_artists():

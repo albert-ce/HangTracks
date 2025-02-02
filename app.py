@@ -20,7 +20,7 @@ def index():
     if access_token:
         return redirect(url_for("game.play"))
     else:
-        return render_template("index.html", artists_data=session.get('artists', {}))
+        return render_template("index.html", artists_data=session.get('artists', []))
 
 def not_found(error):
     return redirect(url_for("index"))

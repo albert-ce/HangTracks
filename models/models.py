@@ -9,7 +9,8 @@ from threading import Lock
 
 NUM_ATTEMPTS = 8
 KEYBOARD = [
-    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+    # Numbers ommited at the moment to prevent issues with titles starting with track numbers
+    # ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
@@ -25,7 +26,7 @@ class LastFmService:
         self.lock = Lock()
         self.last_call = None
         self.waiting_time = 1   # Wait to make only 1 call per second
-        self.n_tracks = 50     # Fetch the first 100 top tracks from the artist
+        self.n_tracks = 60     # Fetch the first 60 top tracks from the artist
         self.api_key = os.getenv('LASTFM_API_KEY')
         self.url = "https://ws.audioscrobbler.com/2.0/"
         self.headers = {"User-Agent": "HangTracks/0.1.0 (https://github.com/albert-ce)"}
@@ -60,13 +61,13 @@ class LastFmService:
         if not session['artists']:
             raise KeyError(f"Not artists selected")
 
-        return random.choice(list(session['artists'].items()))
+        return random.choice(session['artists'])
 
-    def _get_random_title(self, mbid):       
+    def _get_random_title(self, artist):       
         params = {
             "method": "artist.gettoptracks",
             "api_key": self.api_key,
-            "mbid": mbid,
+            "artist": artist,
             "limit": self.n_tracks,
             "format": "json"
         }
@@ -82,8 +83,8 @@ class LastFmService:
         return random_track['name'], random_track['url']
         
     def get_random_track(self):
-        mbid, artist = self._get_random_artist()
-        title, url = self._get_random_title(mbid)
+        artist = self._get_random_artist()
+        title, url = self._get_random_title(artist)
 
         title = re.sub("\(.*\)", "", title)
         title = re.sub("\[.*\]", "", title)
