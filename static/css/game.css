@@ -122,11 +122,11 @@ h3 {
 }
 
 .won {
-    color: rgb(22, 213, 96);
+    color: #16d560;
 }
 
 .lost {
-    color: rgb(251, 73, 52)
+    color: #fb4934
 }
 
 #title {

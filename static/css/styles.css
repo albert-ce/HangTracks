@@ -68,7 +68,7 @@ p {
     line-height: 1.6;
 }
 
-br {
+p br {
     display: block;
     content: "";
     margin-top: 2vmin;
@@ -127,7 +127,7 @@ p.error-message {
 
 .accent-gold {
     font-weight: 600;
-    color: #ffc840;
+    color: #edb730;
 }
 
 .play-button {
@@ -142,7 +142,7 @@ p.error-message {
     padding: 0.5em 1em;
     border: 0;
     border-radius: 1em;
-    background-color: #ffc840;
+    background-color: #edb730;
     color: black;
 }
 
@@ -169,7 +169,7 @@ p.error-message {
     max-width: 60vw;
     border-radius: 1em;
     padding: 0.2em 0.4em 0.2em 0.8em;
-    border: #ffc840 solid 0.1em;
+    border: #edb730 solid 0.1em;
 }
 
 .artist span {
@@ -204,9 +204,10 @@ p.error-message {
     flex-wrap: nowrap;
     height: 2.2em;
     max-width: 40vw;
+    min-width: fit-content;
     margin-top: 1em;
     border-radius: 1em;
-    border: #ffc840 solid 0.1em;
+    border: #edb730 solid 0.1em;
     box-sizing: border-box;
 }
 
@@ -238,14 +239,30 @@ input[type="text"] {
 footer {
     margin: 1.5em auto 1em;
     text-align: center;
-    color: rgba(255, 255, 255, 0.3);
+    color: #ffffff4d;
     font-size: 0.9em;
     font-style: normal;
     width: 100%;
 }
 
+footer .lastfm {
+    text-decoration: none;
+    font-style: italic;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 0.5em;
+}
+
+footer img {
+    width: 2em;
+}
+
 footer * {
-    color: rgba(255, 255, 255, 0.3);
+    color: #ffffff4d;
     font-style: normal;
 }
 
@@ -281,7 +298,7 @@ footer * {
         font-size: 0.9em;
     }
 
-    br {
+    p br {
         margin-top: 3vmin;
     }
 

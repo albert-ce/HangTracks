@@ -11,7 +11,7 @@ NUM_ATTEMPTS = 8
 KEYBOARD = [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
 ]
 LETTERS = {letter for row in KEYBOARD for letter in row}
@@ -20,16 +20,17 @@ import requests
 import time
 import random
 
-class MusicBrainzService:
+class LastFmService:
     def __init__(self):
         self.lock = Lock()
         self.last_call = None
-        self.waiting_time = 1
-        self.user_agent = "HangTracks/0.1.0 (https://github.com/albert-ce)"
-        self.headers = {"User-Agent": self.user_agent}
+        self.waiting_time = 1   # Wait to make only 1 call per second
+        self.n_tracks = 50     # Fetch the first 100 top tracks from the artist
+        self.api_key = os.getenv('LASTFM_API_KEY')
+        self.url = "https://ws.audioscrobbler.com/2.0/"
+        self.headers = {"User-Agent": "HangTracks/0.1.0 (https://github.com/albert-ce)"}
 
     def _wait_rate_limiting(self):
-        # Wait to make only 1 call per second
         with self.lock:
             if self.last_call:
                 time_since_last_call = time.time() - self.last_call
@@ -38,61 +39,60 @@ class MusicBrainzService:
             self.last_call = time.time()
 
     def search_artist(self, artist_name):
-        url = f"https://musicbrainz.org/ws/2/artist/?query=artist:{artist_name}&fmt=json"
+        params = {
+            "method": "artist.search",
+            "api_key": self.api_key,
+            "artist": artist_name,
+            "limit": 1,
+            "format": "json"
+        }
         self._wait_rate_limiting()
-        response = requests.get(url, headers=self.headers)
+        response = requests.post(self.url, data=params, headers=self.headers)
         data = response.json()
 
-        if data.get('artists'):
-            return data['artists'][0]
+        artists_found = data.get('results', {}).get('artistmatches', {}).get('artist')
+        if artists_found:
+            return artists_found[0]
         else:
             return None
 
-    def _get_total_recordings(self, artist_mbid):
-        url = f"https://musicbrainz.org/ws/2/recording/?query=arid:{artist_mbid}&fmt=json"
-        self._wait_rate_limiting()
-        response = requests.get(url, headers=self.headers)
-        data = response.json()
-
-        if 'recordings' in data:
-            return int(data.get('count', 0))
-        else:
-            return 0
-
-    def _get_random_recording(self):
+    def _get_random_artist(self):       
         if not session['artists']:
             raise KeyError(f"Not artists selected")
 
-        artist_mbid = random.choice(list(session['artists'].keys()))
-        total_recordings = self._get_total_recordings(artist_mbid)
+        return random.choice(list(session['artists'].items()))
 
-        if total_recordings == 0:
-            raise ValueError(f"Random artist has no recordings")
-
-        random_offset = random.randint(0, total_recordings - 1)
-        url = f"https://musicbrainz.org/ws/2/recording/?query=arid:{artist_mbid}&offset={random_offset}&limit=1&fmt=json"
+    def _get_random_title(self, mbid):       
+        params = {
+            "method": "artist.gettoptracks",
+            "api_key": self.api_key,
+            "mbid": mbid,
+            "limit": self.n_tracks,
+            "format": "json"
+        }
         self._wait_rate_limiting()
-        response = requests.get(url, headers=self.headers)
+        response = requests.post(self.url, data=params, headers=self.headers)
         data = response.json()
 
-        if 'recordings' in data and data['recordings']:
-            return data['recordings'][0]
-        else:
-            return None
+        tracks = data.get('toptracks', {}).get('track')
+        if not tracks:
+            raise ValueError(f"Random artist has no recordings")
+
+        random_track = random.choice(tracks)
+        return random_track['name'], random_track['url']
         
     def get_random_track(self):
-        recording = self._get_random_recording()
-        artist = recording["artist-credit"][0]["name"]
-        album = recording["releases"][0]["release-group"]["title"]
-        title = recording['title']
+        mbid, artist = self._get_random_artist()
+        title, url = self._get_random_title(mbid)
+
         title = re.sub("\(.*\)", "", title)
         title = re.sub("\[.*\]", "", title)
         title = re.sub("- Remastered.*", "", title)
         title = re.sub("- Mono/Remastered.*", "", title)
         title = re.sub("^\s*", "", title)
         title_cleaned = re.sub("\s*$", "", title)
-        return title_cleaned, {"album":album, "artist":artist}
-    
+
+        return title_cleaned, {"artist":artist, "url":url}
 
 class HangmanGame:
     def _get_base_letters(self, text):

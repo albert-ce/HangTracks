@@ -4,7 +4,7 @@ from models.models import *
 setup = Blueprint('setup', __name__)
 game = Blueprint('game', __name__)
 
-music = MusicBrainzService()
+music = LastFmService()
 
 @setup.route('/setup/add_artist')
 def add_artist():
@@ -13,10 +13,10 @@ def add_artist():
         abort(400, description="The 'search' argument is required")
 
     artist = music.search_artist(search)
-    artist_found = artist is not None
+    artist_found = artist is not None and artist.get('mbid')
 
     if artist_found:
-        session.setdefault('artists', {})[artist['id']] = artist['name']
+        session.setdefault('artists', {})[artist['mbid']] = artist['name']
         session.modified = True
 
     return jsonify({
