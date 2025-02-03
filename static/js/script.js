@@ -34,6 +34,7 @@ async function add_artist() {
         }
         input.placeholder = original;
         input.disabled = false;
+        input.focus();
     }
 }
 

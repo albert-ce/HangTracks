@@ -112,6 +112,12 @@
     min-width: 50%;
 }
 
+.word br {
+    display: block;
+    content: "";
+    margin-top: 1vmin;
+}
+
 .hangman {
     width: 35vh;
 }

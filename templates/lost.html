@@ -1,13 +1,13 @@
 <h3 class="lost">YOU LOST!</h3>
 <div class="game">
     <img class="hangman" src="{{ url_for('static', filename=game_data.img) }}" alt="Hangman">
-    <p class="word">
+    <div class="word">
         <span>The secret title was:</span>
         <br>
         <span class="lost" id="title">{{game_data.secret}}</span>
         <br>
         <span class="info">by {{track_data.artist}}</span>
-    </p>
+    </div>
 </div>
 <div class="final">
     <a style="border: #fb4934 0.15em solid;" target="_blank" href={{track_data.url}}>

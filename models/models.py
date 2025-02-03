@@ -1,9 +1,9 @@
 import os
 import re
 import unicodedata
-import random
+import secrets
 import requests
-from time import time
+import time
 from flask import session
 from threading import Lock
 
@@ -17,16 +17,12 @@ KEYBOARD = [
 ]
 LETTERS = {letter for row in KEYBOARD for letter in row}
 
-import requests
-import time
-import random
-
 class LastFmService:
     def __init__(self):
         self.lock = Lock()
         self.last_call = None
         self.waiting_time = 1   # Wait to make only 1 call per second
-        self.n_tracks = 60     # Fetch the first 60 top tracks from the artist
+        self.n_tracks = 80     # Fetch the first n_tracks top tracks from the artist
         self.api_key = os.getenv('LASTFM_API_KEY')
         self.url = "https://ws.audioscrobbler.com/2.0/"
         self.headers = {"User-Agent": "HangTracks/0.1.0 (https://github.com/albert-ce)"}
@@ -61,8 +57,7 @@ class LastFmService:
         if not session['artists']:
             raise KeyError(f"Not artists selected")
 
-        random.seed(time.time())
-        return random.choice(session['artists'])
+        return secrets.choice(session['artists'])
 
     def _get_random_title(self, artist):       
         params = {
@@ -80,8 +75,7 @@ class LastFmService:
         if not tracks:
             raise ValueError(f"Random artist has no recordings")
 
-        random.seed(time.time())
-        random_track = random.choice(tracks)
+        random_track = secrets.choice(tracks)
         return random_track['name'], random_track['url']
         
     def get_random_track(self):
@@ -100,7 +94,13 @@ class LastFmService:
 class HangmanGame:
     def _get_base_letters(self, text):
         normalized_text = unicodedata.normalize('NFD', text)
-        return ''.join(c for c in normalized_text if unicodedata.category(c) != 'Mn' or c==c == '̃')
+        result = []
+        for char in normalized_text:
+            # Normalize only vowels (á --> a)
+            if unicodedata.category(char) == 'Mn' and result and result[-1].lower() in "aeiou":
+                continue
+            result.append(char)
+        return unicodedata.normalize('NFC', ''.join(result))
     
     def start(self, secret, img_path = 'img/hangman/{n_mistakes}.svg'):
         self.secret = secret.upper()

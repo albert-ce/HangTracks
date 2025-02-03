@@ -239,13 +239,15 @@ input[type="text"] {
 footer {
     margin: 1.5em auto 1em;
     text-align: center;
-    color: #ffffff4d;
     font-size: 0.9em;
+    color: #edb73063;
     font-style: normal;
     width: 100%;
 }
 
 footer .lastfm {
+    color: #ffffff4d;
+    font-size: smaller;
     text-decoration: none;
     font-style: italic;
     display: flex;
@@ -254,15 +256,15 @@ footer .lastfm {
     justify-content: center;
     align-items: center;
     align-content: center;
-    gap: 0.5em;
+    gap: 0.35em;
 }
 
 footer img {
-    width: 2em;
+    width: 1.6em;
 }
 
-footer * {
-    color: #ffffff4d;
+footer a {
+    color: #edb73063;
     font-style: normal;
 }
 
