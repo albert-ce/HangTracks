@@ -61,6 +61,7 @@ class LastFmService:
         if not session['artists']:
             raise KeyError(f"Not artists selected")
 
+        random.seed(time.time())
         return random.choice(session['artists'])
 
     def _get_random_title(self, artist):       
@@ -79,6 +80,7 @@ class LastFmService:
         if not tracks:
             raise ValueError(f"Random artist has no recordings")
 
+        random.seed(time.time())
         random_track = random.choice(tracks)
         return random_track['name'], random_track['url']
         
@@ -98,7 +100,7 @@ class LastFmService:
 class HangmanGame:
     def _get_base_letters(self, text):
         normalized_text = unicodedata.normalize('NFD', text)
-        return ''.join(c for c in normalized_text if unicodedata.category(c) != 'Mn')
+        return ''.join(c for c in normalized_text if unicodedata.category(c) != 'Mn' or c==c == '̃')
     
     def start(self, secret, img_path = 'img/hangman/{n_mistakes}.svg'):
         self.secret = secret.upper()
