@@ -7,7 +7,6 @@ import time
 from flask import session
 from threading import Lock
 
-NUM_ATTEMPTS = 8
 KEYBOARD = [
     # Numbers ommited at the moment to prevent issues with titles starting with track numbers
     # ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
@@ -91,6 +90,15 @@ class LastFmService:
 
         return title_cleaned, {"artist":artist, "url":url}
 
+IMG_IDS = {1:[0,2,4,9,10],
+           2:[0,2,4,7,9,10],
+           3:[0,2,3,4,7,9,10],
+           4:[0,1,2,3,4,7,9,10],
+           5:[0,1,2,3,4,5,7,9,10],
+           6:[0,1,2,3,4,5,6,7,9,10],
+           7:[0,1,2,3,4,5,6,7,8,9,10]}
+
+
 class HangmanGame:
     def _get_base_letters(self, text):
         normalized_text = unicodedata.normalize('NFD', text)
@@ -102,11 +110,12 @@ class HangmanGame:
             result.append(char)
         return unicodedata.normalize('NFC', ''.join(result))
     
-    def start(self, secret, img_path = 'img/hangman/{n_mistakes}.svg'):
+    def start(self, secret, difficulty = 1, img_path = 'img/hangman/{img_id}.svg'):
         self.secret = secret.upper()
         self.base_letters_secret = self._get_base_letters(self.secret)
         self.display = ''.join(["_" if letter in LETTERS else letter for letter in self.base_letters_secret])
-        self.mistakes_left = NUM_ATTEMPTS
+        self.difficulty = min(difficulty, 7)
+        self.mistakes_left = 3+difficulty
         self.mistakes = set()
         self.hits = set()
         self.ended = "_" not in self.display
@@ -135,19 +144,21 @@ class HangmanGame:
             'secret': self.secret,
             'base_letters_secret': self.base_letters_secret,
             'display': self.display,
+            'difficulty': self.difficulty,
             'mistakes_left': self.mistakes_left,
             'mistakes': list(self.mistakes),
             'hits': list(self.hits),
             'ended': self.ended,
             'win': self.win,
             'img_path': self.img_path,
-            "img": self.img_path.format(n_mistakes=len(self.mistakes)),
+            "img": self.img_path.format(img_id=IMG_IDS[self.difficulty][len(self.mistakes)]),
         }
     
     def load_state(self, data):
         self.secret = data['secret']
         self.base_letters_secret = data['base_letters_secret']
         self.display = data['display']
+        self.difficulty = data['difficulty']
         self.mistakes_left = data['mistakes_left']
         self.mistakes = set(data['mistakes'])
         self.hits = set(data['hits'])

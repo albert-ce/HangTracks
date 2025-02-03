@@ -56,27 +56,6 @@ async function remove_artist(name) {
     document.getElementById('artists').innerHTML = responseTxt;
 }
 
-async function new_game() {
-    var response = await fetch('/game/start');
-    var responseTxt = await response.text()
-
-    const contentElement = document.getElementById('content');
-    const scrollPos = { x: window.scrollX, y: window.scrollY };
-
-    const newImg = new Image();
-    newImg.src = responseTxt.match(/src="([^"]+)"/)[1];
-
-    newImg.onload = () => {
-        contentElement.innerHTML = responseTxt;
-        window.scrollTo(scrollPos.x, scrollPos.y);
-    };
-
-    if (newImg.complete) {
-        contentElement.innerHTML = responseTxt;
-        window.scrollTo(scrollPos.x, scrollPos.y);
-    }
-}
-
 async function guess(letter) {
     var response = await fetch('/game/guess?letter=' + letter);
     var responseTxt = await response.text();
@@ -96,4 +75,28 @@ async function guess(letter) {
         contentElement.innerHTML = responseTxt;
         window.scrollTo(scrollPos.x, scrollPos.y);
     }
+}
+
+async function new_game() {
+    var response = await fetch('/game/start');
+    var responseJSON = await response.json()
+
+    const contentElement = document.getElementById('content');
+    const scrollPos = { x: window.scrollX, y: window.scrollY };
+
+    const newImg = new Image();
+    newImg.src = responseJSON['html'].match(/src="([^"]+)"/)[1];
+
+    newImg.onload = () => {
+        contentElement.innerHTML = responseJSON['html'];
+        window.scrollTo(scrollPos.x, scrollPos.y);
+    };
+
+    if (newImg.complete) {
+        contentElement.innerHTML = responseJSON['html'];
+        window.scrollTo(scrollPos.x, scrollPos.y);
+    }
+
+    if (responseJSON['win'])
+        guess('A');
 }

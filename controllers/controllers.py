@@ -50,9 +50,13 @@ def play():
 def start_game():
     secret, session['track_data'] = music.get_random_track()
     hangman = HangmanGame()
-    hangman.start(secret)
+    difficulty = len(session.get('artists', []))
+    hangman.start(secret, difficulty)
     session['game_data'] = hangman.get_data()
-    return render_template('game.html', game_data=session['game_data'], keyboard=KEYBOARD)
+    return jsonify({
+        "html": render_template('game.html', game_data=session['game_data'], keyboard=KEYBOARD),
+        "win": hangman.win
+    })
 
 @game.route('/game/guess')
 def guess():
