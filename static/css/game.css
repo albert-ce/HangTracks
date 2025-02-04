@@ -187,4 +187,8 @@ h3 {
     #loading {
         font-size: 1em;
     }
+
+    .final {
+        flex-direction: column;
+    }
 }

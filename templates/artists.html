@@ -1,10 +1,9 @@
 {% if not artists_data %}
 <span class="no-artists">No artists selected</span>
 {% endif %}
-{% for name in artists_data %}
+{% for id, name in artists_data.items() %}
 <div class="artist">
     <span>{{name}}</span>
-    <img onclick="remove_artist('{{name}}');" src="{{ url_for('static', filename='img/close.svg')}}"
-        alt="Remove artist">
+    <img onclick='remove_artist("{{id}}");' src="{{ url_for('static', filename='img/close.svg')}}" alt="Remove artist">
 </div>
 {% endfor %}

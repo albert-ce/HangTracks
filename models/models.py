@@ -6,6 +6,7 @@ import requests
 import time
 from flask import session
 from threading import Lock
+import urllib.parse
 
 KEYBOARD = [
     # Numbers ommited at the moment to prevent issues with titles starting with track numbers
@@ -21,10 +22,10 @@ class LastFmService:
         self.lock = Lock()
         self.last_call = None
         self.waiting_time = 1   # Wait to make only 1 call per second
-        self.n_tracks = 80     # Fetch the first n_tracks top tracks from the artist
-        self.api_key = os.getenv('LASTFM_API_KEY')
-        self.url = "https://ws.audioscrobbler.com/2.0/"
-        self.headers = {"User-Agent": "HangTracks/0.1.0 (https://github.com/albert-ce)"}
+        self.headers = {
+            "User-Agent": "HangTracks/0.1.0 +https://hangtracks.onrender.com/",
+            "Authorization": "Discogs key="+os.getenv('DISCOGS_KEY')+", secret="+os.getenv('DISCOGS_SECRET')
+        }
 
     def _wait_rate_limiting(self):
         with self.lock:
@@ -35,18 +36,13 @@ class LastFmService:
             self.last_call = time.time()
 
     def search_artist(self, artist_name):
-        params = {
-            "method": "artist.search",
-            "api_key": self.api_key,
-            "artist": artist_name,
-            "limit": 1,
-            "format": "json"
-        }
+        artist_name = urllib.parse.quote(artist_name)
+        url = f"https://api.discogs.com/database/search?q={artist_name}&type=artist"
         self._wait_rate_limiting()
-        response = requests.post(self.url, data=params, headers=self.headers)
+        response = requests.get(url, headers=self.headers)
         data = response.json()
 
-        artists_found = data.get('results', {}).get('artistmatches', {}).get('artist')
+        artists_found = data.get('results')
         if artists_found:
             return artists_found[0]
         else:
@@ -56,30 +52,45 @@ class LastFmService:
         if not session['artists']:
             raise KeyError(f"Not artists selected")
 
-        return secrets.choice(session['artists'])
+        return secrets.choice(list(session['artists'].items()))
 
-    def _get_random_title(self, artist):       
-        params = {
-            "method": "artist.gettoptracks",
-            "api_key": self.api_key,
-            "artist": artist,
-            "limit": self.n_tracks,
-            "format": "json"
-        }
+    def _get_random_release(self, artist):
+        artist_id, artist_name = artist       
+        url = f"https://api.discogs.com/artists/{artist_id}/releases"
         self._wait_rate_limiting()
-        response = requests.post(self.url, data=params, headers=self.headers)
+        response = requests.get(url, headers=self.headers)
         data = response.json()
 
-        tracks = data.get('toptracks', {}).get('track')
+        releases = data.get('releases')
+        if not releases:
+            raise ValueError(f"Random artist has no releases")
+
+        release = {}
+        while True:
+            release = secrets.choice(releases)
+            if release.get("artist") == artist_name:
+                return release
+            releases.remove(release)
+            if not releases:
+                raise ValueError("Random artist has no self-made releases")
+
+    def _get_random_title(self, release):       
+        url = release.get('resource_url')
+        self._wait_rate_limiting()
+        response = requests.get(url, headers=self.headers)
+        data = response.json()
+
+        tracks = data.get('tracklist')
         if not tracks:
-            raise ValueError(f"Random artist has no recordings")
+            raise ValueError(f"Random release has no tracks")
 
         random_track = secrets.choice(tracks)
-        return random_track['name'], random_track['url']
+        return random_track['title'], data.get('uri')
         
     def get_random_track(self):
         artist = self._get_random_artist()
-        title, url = self._get_random_title(artist)
+        release = self._get_random_release(artist)
+        title, url = self._get_random_title(release)
 
         title = re.sub("\(.*\)", "", title)
         title = re.sub("\[.*\]", "", title)
@@ -88,7 +99,7 @@ class LastFmService:
         title = re.sub("^\s*", "", title)
         title_cleaned = re.sub("\s*$", "", title)
 
-        return title_cleaned, {"artist":artist, "url":url}
+        return title_cleaned, {"artist":release["artist"], "album":release["title"], "url":url}
 
 IMG_IDS = {1:[0,2,4,9,10],
            2:[0,2,4,7,9,10],

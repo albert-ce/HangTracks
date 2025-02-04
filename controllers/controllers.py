@@ -16,25 +16,25 @@ def add_artist():
     artist_found = artist is not None
 
     if artist_found:
-        session.setdefault('artists', []).append(artist['name'])
+        session.setdefault('artists', {})[str(artist['id'])] = artist['title']
         session.modified = True
 
     return jsonify({
-        "html": render_template('artists.html', artists_data=session.get('artists', [])),
+        "html": render_template('artists.html', artists_data=session.get('artists', {})),
         "artist_found": artist_found
     })
 
 @setup.route('/setup/remove_artist')
 def remove_artist():
-    name = request.args.get('name')
-    if not name:
-        abort(400, description="The 'name' argument is required")
+    id = request.args.get('id')
+    if not id:
+        abort(400, description="The 'id' argument is required")
 
-    if name in session.get('artists', []):
-        session['artists'].remove(name)
+    if id in session.get('artists', {}):
+        del session['artists'][id]
         session.modified = True
 
-    return render_template('artists.html', artists_data=session.get('artists', []))
+    return render_template('artists.html', artists_data=session.get('artists', {}))
 
 @setup.route('/setup/check_artists')
 def check_artists():
@@ -50,7 +50,7 @@ def play():
 def start_game():
     secret, session['track_data'] = music.get_random_track()
     hangman = HangmanGame()
-    difficulty = len(session.get('artists', []))
+    difficulty = len(session.get('artists', {}))
     hangman.start(secret, difficulty)
     session['game_data'] = hangman.get_data()
     return jsonify({
