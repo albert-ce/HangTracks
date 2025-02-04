@@ -4,7 +4,7 @@ from models.models import *
 setup = Blueprint('setup', __name__)
 game = Blueprint('game', __name__)
 
-music = LastFmService()
+music = DiscogsService()
 
 @setup.route('/setup/add_artist')
 def add_artist():

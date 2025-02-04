@@ -2,7 +2,7 @@
 
 # HangTracks: Play hangman with your favorite songs
 
-**HangTracks** is a web app built with Python that fetches a random title from your favourite artists and turns it into a game of hangman. It uses Last.fm's API to select artists and tracks, transforming music into a unique challenge.
+**HangTracks** is a web app built with Python that fetches a random title from your favourite artists and turns it into a game of hangman. It uses Discogs' API to select artists and tracks, transforming music into a unique challenge.
 - **Quick**: As fast as playing *Wordle*.
 - **Simple**: A classic game everyone knows.
 - **Personalized**: It uses song titles of your favorite artists.
@@ -26,8 +26,12 @@ Explore the online version of this project and see it in action!
 ## Troubleshooting
 The game experience can be affected by:
 
-- **Title Accuracy**: Last.fm song titles may not always be 100% accurate. HangTracks cleans the titles and selects only the top songs to minimize this issue.
+- ~~**Title Accuracy**: Last.fm song titles may not always be 100% accurate. HangTracks cleans the titles and selects only the top songs to minimize this issue.~~ Discogs' API provides accurate titles.
 - **Special Characters**: Non-vowel special characters like "ç" or "ñ" are not included in the virtual keyboard, so they won’t be hidden. However, for vowels with accents or diacritics (e.g., "á", "ï"), use the base letter (e.g., "a", "i") to guess them.
+
+## Third-Party API Disclaimer
+
+*This application uses Discogs’ API but is not affiliated with, sponsored or endorsed by Discogs. ‘Discogs’ is a trademark of Zink Media, LLC.*
 
 ## Installation and Setup
 
@@ -46,15 +50,16 @@ pip install -r requirements.txt
 ### 3. Get Secret Tokens
 
 > [!WARNING]  
-> This app requires a Last.fm API token to function. Follow the instructions below to generate and configure it.
+> This app requires Discogs' API credentials to function. Follow the instructions below to generate and configure them.
 
-#### Last.fm
-1. Go to the [Last.fm API](https://www.last.fm/api) page and create an account or log in.
-2. Once logged in, visit the [Get an API account](https://www.last.fm/api/account/create) page and create a new API application.
-3. Note down your **API key**.
-4. Save your **API key** in a `.env` file in the root directory of the project:
+#### Discogs
+1. Visit the [Discogs API](https://www.discogs.com/developers) page.  
+2. Go to the [Create an App](https://www.discogs.com/settings/developers) page and create an account or log in.  
+3. Register a new application to obtain your **Client Key** and **Client Secret**.  
+4. Save your credentials in a `.env` file in the root directory of the project:  
     ```.env
-    LASTFM_API_KEY='your-api-key'
+    DISCOGS_KEY='your-consumer-key'
+    DISCOGS_SECRET='your-consumer-secret'
     ```
 
 #### Flask Secret Key
@@ -78,14 +83,10 @@ pip install -r requirements.txt
 
 2. Once the app is running, open your browser and go to `http://127.0.0.1:5000` to start playing HangTracks locally.
 
-## Third-Party API Disclaimer
-
-*This application uses Discogs’ API but is not affiliated with, sponsored or endorsed by Discogs. ‘Discogs’ is a trademark of Zink Media, LLC.*
-
 ## Third-Party Attributions
 
 This source code uses third-party libraries, including:
-- **requests**: For Last.fm API interaction.
+- **requests**: For Discogs API interaction.
 - **Flask**: For the web framework.
 - **python-dotenv**: For managing environment variables.
 - **gunicorn**: For serving the app in production.

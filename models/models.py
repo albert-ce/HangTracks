@@ -17,7 +17,7 @@ KEYBOARD = [
 ]
 LETTERS = {letter for row in KEYBOARD for letter in row}
 
-class LastFmService:
+class DiscogsService:
     def __init__(self):
         self.lock = Lock()
         self.last_call = None
