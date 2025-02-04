@@ -295,6 +295,12 @@ footer a {
         height: 1.7em;
     }
 
+    .intro,
+    .artists,
+    .artist {
+        max-width: 75vw;
+    }
+
     h2 {
         font-size: 1.1em;
     }
