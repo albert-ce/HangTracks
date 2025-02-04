@@ -78,7 +78,7 @@ pip install -r requirements.txt
 
 2. Once the app is running, open your browser and go to `http://127.0.0.1:5000` to start playing HangTracks locally.
 
-## API Attributions
+## Third-Party API Disclaimer
 
 *This application uses Discogs’ API but is not affiliated with, sponsored or endorsed by Discogs. ‘Discogs’ is a trademark of Zink Media, LLC.*
 
