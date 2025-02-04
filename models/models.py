@@ -47,15 +47,8 @@ class DiscogsService:
             return artists_found[0]
         else:
             return None
-
-    def _get_random_artist(self):       
-        if not session['artists']:
-            raise KeyError(f"Not artists selected")
-
-        return secrets.choice(list(session['artists'].items()))
-
-    def _get_random_release(self, artist):
-        artist_id, artist_name = artist       
+        
+    def get_artist_releases(self, artist_id, artist_name):
         url = f"https://api.discogs.com/artists/{artist_id}/releases"
         self._wait_rate_limiting()
         response = requests.get(url, headers=self.headers)
@@ -63,16 +56,18 @@ class DiscogsService:
 
         releases = data.get('releases')
         if not releases:
-            raise ValueError(f"Random artist has no releases")
+            return None # Artist has no releases
 
-        release = {}
-        while True:
-            release = secrets.choice(releases)
-            if release.get("artist") == artist_name:
-                return release
-            releases.remove(release)
-            if not releases:
-                raise ValueError("Random artist has no self-made releases")
+        releases = [release for release in releases if release.get("artist") == artist_name]
+        if not releases:
+            return None # Artist has no self-made releases
+
+        # Prioritize albums (masters) over singles and other types
+        results = [release for release in releases if release.get("type") == "master"]
+        if not results:
+            results = releases
+
+        return [{"title":release["title"], "resource_url":release["resource_url"]} for release in results]
 
     def _get_random_title(self, release):       
         url = release.get('resource_url')
@@ -88,8 +83,10 @@ class DiscogsService:
         return random_track['title'], data.get('uri')
         
     def get_random_track(self):
-        artist = self._get_random_artist()
-        release = self._get_random_release(artist)
+        if not session['artists']:
+            raise KeyError(f"Not artists selected")
+        artist = secrets.choice(list(session['artists'].values()))
+        release = secrets.choice(artist.get('releases'))
         title, url = self._get_random_title(release)
 
         title = re.sub("\(.*\)", "", title)
@@ -99,7 +96,7 @@ class DiscogsService:
         title = re.sub("^\s*", "", title)
         title_cleaned = re.sub("\s*$", "", title)
 
-        return title_cleaned, {"artist":release["artist"], "album":release["title"], "url":url}
+        return title_cleaned, {"artist":artist["name"], "album":release["title"], "url":url}
 
 IMG_IDS = {1:[0,2,4,9,10],
            2:[0,2,4,7,9,10],
@@ -111,6 +108,9 @@ IMG_IDS = {1:[0,2,4,9,10],
 
 
 class HangmanGame:
+    def __init__(self, img_path = 'img/hangman/{img_id}.svg'):
+        self.img_path = img_path
+
     def _get_base_letters(self, text):
         normalized_text = unicodedata.normalize('NFD', text)
         result = []
@@ -121,7 +121,7 @@ class HangmanGame:
             result.append(char)
         return unicodedata.normalize('NFC', ''.join(result))
     
-    def start(self, secret, difficulty = 1, img_path = 'img/hangman/{img_id}.svg'):
+    def start(self, secret, difficulty = 1):
         self.secret = secret.upper()
         self.base_letters_secret = self._get_base_letters(self.secret)
         self.display = ''.join(["_" if letter in LETTERS else letter for letter in self.base_letters_secret])
@@ -131,7 +131,6 @@ class HangmanGame:
         self.hits = set()
         self.ended = "_" not in self.display
         self.win = "_" not in self.display
-        self.img_path = img_path
 
     def guess(self, letter):
         letter = letter.upper()
@@ -156,12 +155,8 @@ class HangmanGame:
             'base_letters_secret': self.base_letters_secret,
             'display': self.display,
             'difficulty': self.difficulty,
-            'mistakes_left': self.mistakes_left,
             'mistakes': list(self.mistakes),
             'hits': list(self.hits),
-            'ended': self.ended,
-            'win': self.win,
-            'img_path': self.img_path,
             "img": self.img_path.format(img_id=IMG_IDS[self.difficulty][len(self.mistakes)]),
         }
     
@@ -170,9 +165,8 @@ class HangmanGame:
         self.base_letters_secret = data['base_letters_secret']
         self.display = data['display']
         self.difficulty = data['difficulty']
-        self.mistakes_left = data['mistakes_left']
         self.mistakes = set(data['mistakes'])
+        self.mistakes_left = 3 + data['difficulty'] - len(data['mistakes'])
         self.hits = set(data['hits'])
-        self.ended = data['ended']
-        self.win = data['win']
-        self.img_path = data['img_path']
+        self.ended = "_" not in self.display or self.mistakes_left == 0
+        self.win = "_" not in self.display

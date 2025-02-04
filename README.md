@@ -27,11 +27,15 @@ Explore the online version of this project and see it in action!
 The game experience can be affected by:
 
 - ~~**Title Accuracy**: Last.fm song titles may not always be 100% accurate. HangTracks cleans the titles and selects only the top songs to minimize this issue.~~ Discogs' API provides accurate titles.
+- **Slow Artist Search**: HangTracks takes longer to select artists because it makes two API calls (searching for the artist and getting its releases) and has to wait due to the 60 calls per minute limit. 
 - **Special Characters**: Non-vowel special characters like "ç" or "ñ" are not included in the virtual keyboard, so they won’t be hidden. However, for vowels with accents or diacritics (e.g., "á", "ï"), use the base letter (e.g., "a", "i") to guess them.
 
 ## Third-Party API Disclaimer
 
 *This application uses Discogs’ API but is not affiliated with, sponsored or endorsed by Discogs. ‘Discogs’ is a trademark of Zink Media, LLC.*
+
+> [!NOTE]  
+> HangTracks also provides a hyperlink indicating that the data was provided by Discogs during artist selection and at the end of each game, when the title and other track information are revealed, as required by the [API's Terms of Service](https://support.discogs.com/hc/articles/360009334593-API-Terms-of-Use).
 
 ## Installation and Setup
 

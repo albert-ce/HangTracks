@@ -16,12 +16,18 @@ def add_artist():
     artist_found = artist is not None
 
     if artist_found:
-        session.setdefault('artists', {})[str(artist['id'])] = artist['title']
-        session.modified = True
+        artist_id = str(artist.get('id'))
+        artist_name = artist.get('title')
+        releases = music.get_artist_releases(artist_id, artist_name)
+        releases_found = releases is not None
+
+        if releases_found:
+            session.setdefault('artists', {})[artist_id] = {'name':artist_name, 'releases':releases}
+            session.modified = True
 
     return jsonify({
         "html": render_template('artists.html', artists_data=session.get('artists', {})),
-        "artist_found": artist_found
+        "artist_found": artist_found and releases_found
     })
 
 @setup.route('/setup/remove_artist')
@@ -69,8 +75,8 @@ def guess():
     hangman.guess(letter)
     session['game_data'] = hangman.get_data()
 
-    if session['game_data']['ended']:
-        if session['game_data']['win']:
+    if hangman.ended:
+        if hangman.win:
             return render_template('won.html', game_data=session['game_data'], track_data=session["track_data"])
         else:
             return render_template('lost.html', game_data=session['game_data'], track_data=session["track_data"])

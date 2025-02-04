@@ -1,9 +1,15 @@
-{% if not artists_data %}
-<span class="no-artists">No artists selected</span>
-{% endif %}
-{% for id, name in artists_data.items() %}
-<div class="artist">
-    <span>{{name}}</span>
-    <img onclick='remove_artist("{{id}}");' src="{{ url_for('static', filename='img/close.svg')}}" alt="Remove artist">
+<div class="artists">
+    {% if not artists_data %}
+    <span class="no-artists">No artists selected</span>
+    {% endif %}
+    {% for id, artist in artists_data.items() %}
+    <div class="artist">
+        <span>{{artist.name}}</span>
+        <img onclick='remove_artist("{{id}}");' src="{{ url_for('static', filename='img/close.svg')}}"
+            alt="Remove artist">
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
+{% if artists_data %}
+<span class="discogs-artists">Data provided by <a href="https://www.discogs.com/">Discogs</a></span>
+{% endif %}
